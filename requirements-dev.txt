@@ -1,0 +1,13 @@
+build
+setuptools
+setuptools_scm
+wheel
+mkdocs
+mkdocstrings[python]
+mkdocs-material
+mkdocs-jupyter
+kagglehub
+ipywidgets
+kaleido
+matplotlib
+pytest
