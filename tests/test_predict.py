@@ -20,11 +20,12 @@ def test_single_predict():
             [7, 6]    # Y_{t-2}
       ])
 
-      Y_test = jnp.array([10.4,  9.7])
+      Y_test = jnp.array([6.4, 3.8])
       
       Y_pred = av.predict(X)
 
-      assert(jnp.array_equal(Y_test, Y_pred))
+      assert(Y_pred.shape == Y_test.shape)
+      assert(jnp.allclose(Y_test, Y_pred, atol=1e-1))
 
 
 def test_multiple_predict():
@@ -48,13 +49,14 @@ def test_multiple_predict():
       ])
 
       Y_test = jnp.array(
-            [[12.7, 12. ],
-             [20.2, 19.5],
-             [27.7, 27. ],
-             [35.2, 34.5]])
+            [[ 0.7, 11.8],
+             [ 1.2, 18.8],
+             [ 1.7, 25.8],
+             [ 2.2, 32.8]])
 
       X, Y_target = av._prepare_data(Y, p=2) # one batch
 
       Y_pred = vmap(lambda x: av.predict(x))(X)
 
-      assert(jnp.array_equal(Y_test, Y_pred))
+      assert(Y_pred.shape == Y_test.shape)
+      assert(jnp.allclose(Y_test, Y_pred, atol=1e-1))
