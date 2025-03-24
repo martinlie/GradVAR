@@ -19,22 +19,52 @@ Where:
 * $p$ is the number of lags,
 * $\epsilon_t$ is a vector of error terms (shocks or innovations) at time $t$
 
-VAR models need continous time series - when modeling, ensure that there are no gaps in the time series data.
 
 ## Why this lib?
 
-* dis-continouse time series
-* optimize matrices by gradient decent
-* update training with new data
-* custom loss function and weighting profiles
+Traditional Vector Autoregression (VAR) models require continuous time series and are often estimated using least squares methods, which can be inefficient for large datasets or evolving time series. GradVAR introduces a more flexible and adaptive approach by leveraging gradient-based optimization techniques.
+
+* **Discontinuous Time Series** Unlike standard VAR models, GradVAR can be used to process time series with missing observations or irregular sampling
+* **Gradient-Based Matrix Optimization** Instead of relying on closed-form solutions, GradVAR optimizes the coefficient matrices using gradient descent, allowing for better performance on large datasets.
+* **Incremental Training with New Data** GradVAR allows continuous learning by updating the existing model with new observations.
+* **Custom Loss Functions and Weighting** You can define your own loss function and assign weights to different time periods or variables, tailoring the model to specific forecasting needs.
 
 ## Pre-requisites
 
-* stationary data
-* standardized/z-score normalized data
+The library works on simple data matrices, data frame functionality is out of scope for this library and should be implemented elsewhere.
+
+* **Stationary Data** Ensure the time series is stationary; differencing or transformation may be needed.
+* **Standardized Data** Use z-score normalization for consistent scaling across variables before calling the library, or use batch normalization externally
 
 ## Why Use JAX?
 
-* Autodiff (grad): No need to manually derive gradients.
-* JIT Compilation (jit): Fast execution.
-* GPU/TPU Support: Scalable for large data.
+JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation:
+
+* Autodiff (grad)
+* JIT Compilation (jit)
+* GPU/TPU Support
+
+# Development
+
+## Install the Library Locally
+
+Use `pip install -e` to create an **editable installation**:
+
+      pip install -e ../gradvar
+    
+This creates a symbolic link to your library directory, so changes in the library are immediately reflected in any project that uses it.
+
+## Build the library
+
+```
+pip install -r requirements-dev.txt
+python -m build
+```
+
+## Release WHL file
+
+```
+conda install gh --channel conda-forge
+gh auth login
+gh release create release-0.1.0 dist/gradvar-0.1.0-py3-none-any.whl --generate-notes
+```
