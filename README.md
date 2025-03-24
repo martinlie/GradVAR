@@ -38,21 +38,27 @@ The library works on simple data matrices, data frame functionality is out of sc
 
 ## Why Use JAX?
 
-JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation:
+JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support.
 
-* Autodiff (grad)
-* JIT Compilation (jit)
-* GPU/TPU Support
+# Installation
 
-# Development
+## Install via pip
+
+The library can be installed directly from the repository using:
+
+      pip install gradvar@git+https://github.com/martinlie/gradvar.git@main#egg=gradvar
+
+into the current environment. 
 
 ## Install the Library Locally
 
-Use `pip install -e` to create an **editable installation**:
+Use `pip install -e` to create an **editable installation**, by first cloning the repository and then:
 
       pip install -e ../gradvar
     
 This creates a symbolic link to your library directory, so changes in the library are immediately reflected in any project that uses it.
+
+# Development
 
 ## Build the library
 
