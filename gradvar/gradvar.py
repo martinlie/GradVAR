@@ -31,11 +31,9 @@ class GradVAR:
             output = jnp.sum(result, axis=0) + B
             return output
 
-      def _compute_loss_multi(self, A, B, X, Y_target):
-            # could use A_normalized = batch_norm(A)  # Batch normalization
-            # TODO loss weighting
+      def _compute_loss_multi(self, A, B, X, Y_target, W):
             Y_pred = vmap(lambda x: self._predict(A, B, x))(X) # multiple
-            loss = jnp.mean((Y_target - Y_pred) ** 2)
+            loss = jnp.mean((Y_target - Y_pred) ** 2) * W
             return loss
 
       def _prepare_data(self, Y, p):
@@ -54,7 +52,7 @@ class GradVAR:
             #B = jr.normal(key_B, (k,)) * jnp.sqrt(2.0 / k)             # Intercept term (Glorot)
             return A, B
 
-      def train(self, Y, p, num_epochs=1000, learning_rate=0.001, disable_progress=False, A=None, B=None, early_stopping=None):
+      def train(self, Y, p, num_epochs=1000, learning_rate=0.001, disable_progress=False, A=None, B=None, W=1., early_stopping=None):
             """ Train VAR model using JAX autodiff """
             
             train_losses = jnp.zeros((num_epochs,))
@@ -67,10 +65,10 @@ class GradVAR:
 
             for epoch in tqdm(range(num_epochs), disable=disable_progress):
 
-                  X, Y_target = self._prepare_data(Y, p=p) # TODO pick some batches
+                  X, Y_target = self._prepare_data(Y, p=p)
 
                   # Autodiff-based gradient calculations and coefficient update
-                  loss, grads = value_and_grad(self._compute_loss_multi, argnums=(0, 1))(A, B, X, Y_target)
+                  loss, grads = value_and_grad(self._compute_loss_multi, argnums=(0, 1))(A, B, X, Y_target, W)
                   updates, opt_state = optimizer.update(grads, opt_state, (A, B))
                   A, B = optax.apply_updates((A, B), updates)
 
