@@ -1,3 +1,35 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "GradVAR"
+description = "Gradient update Vector Autoregression modeling library"
+dynamic = ["version"]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
+requires-python = ">= 3.9"
+authors = [
+  {name = "Martin Forsberg Lie", email = "martin.lie@gmail.com"}
+]
+maintainers = [
+  {name = "Martin Forsberg Lie", email = "martin.lie@gmail.com"}
+]
+dependencies = [
+  "jax",
+  "optax",
+  "tqdm"
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Repository = "https://github.com/martinlie/GradVAR.git"
+Issues = "https://github.com/martinlie/GradVAR/issues"
+Changelog = "https://github.com/martinlie/GradVAR/activity"
+
+[tool.setuptools.dynamic]
+version = {attr = "gradvar.__version__"}  # any module attribute compatible with ast.literal_eval

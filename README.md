@@ -71,10 +71,16 @@ pip install -r requirements.txt
 python -m build
 ```
 
-## Release WHL file
+## Upload to PyPi
+
+```
+twine upload dist/*
+```
+
+## Release WHL file to Github
 
 ```
 conda install gh --channel conda-forge
 gh auth login
-gh release create release-0.1.0 dist/gradvar-0.1.0-py3-none-any.whl --generate-notes
+gh release create release-2025.3.1 dist/gradvar-2025.3.1-py3-none-any.whl --generate-notes
 ```
