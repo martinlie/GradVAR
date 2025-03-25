@@ -67,6 +67,7 @@ Refer to the examples folder for notebooks that demonstrate how to use the libra
 
 ```
 pip install -r requirements-dev.txt
+pip install -r requirements.txt
 python -m build
 ```
 
