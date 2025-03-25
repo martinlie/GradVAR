@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="GradVAR",
-    version="0.1.0",
+    version="2025.3.1",
     description="Gradient update Vector Autoregression modeling library",
-    author="Martin Lie",
+    author="Martin Forsberg Lie",
     packages=find_packages(),
     install_requires=[
       "jax",
