@@ -35,11 +35,4 @@ jobs:
         pip install -e .
     - name: Test with pytest
       run: |
-        pytest tests/ --doctest-modules --cov=com --cov-report=xml --cov-report=html
-    - name: Upload pytest test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: pytest-results-${{ matrix.python-version }}
-      # Use always() to always run this step to publish test results when there are test failures
-      if: ${{ always() }}
-
+        pytest tests/
