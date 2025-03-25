@@ -3,7 +3,6 @@ import jax.numpy as jnp
 import jax.random as jr
 from gradvar.gradvar import GradVAR
 from gradvar.earlystopping import EarlyStopping
-import matplotlib.pyplot as plt
 
 def generate_sinusoidal_data(T, noise_std=0.05, key=jr.PRNGKey(0)):
     """ Generate a 2D time series: one sine and one cosine wave with noise """
