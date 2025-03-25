@@ -14,6 +14,7 @@ def test_single_predict():
 
       av.B = jnp.array([0.5, -0.2])  # Bias term
       av.p = 2
+      av.k = 2
 
       X = jnp.array([
             [10, 5],  # Y_{t-1}
@@ -38,6 +39,7 @@ def test_multiple_predict():
 
       av.B = jnp.array([0.5, -0.2])  # Bias term
       av.p = 2
+      av.k = 2
 
       Y = jnp.array([
             [1.0, 10.0],  # t=0

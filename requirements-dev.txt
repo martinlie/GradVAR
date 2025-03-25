@@ -9,5 +9,5 @@ mkdocs-jupyter
 kagglehub
 ipywidgets
 kaleido
-matplotlib
 pytest
+pytest-cov
