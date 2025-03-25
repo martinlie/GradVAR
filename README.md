@@ -19,7 +19,6 @@ Where:
 * $p$ is the number of lags,
 * $\epsilon_t$ is a vector of error terms (shocks or innovations) at time $t$
 
-
 ## Why this lib?
 
 Traditional Vector Autoregression (VAR) models require continuous time series and are often estimated using least squares methods, which can be inefficient for large datasets or evolving time series. GradVAR introduces a more flexible and adaptive approach by leveraging gradient-based optimization techniques.
@@ -38,7 +37,7 @@ The library works on simple data matrices, data frame functionality is out of sc
 
 ## Why Use JAX?
 
-JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support.
+JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support. Further, the gradient update is done by the Adam optimizer.
 
 # Installation
 
@@ -54,9 +53,13 @@ into the current environment.
 
 Use `pip install -e` to create an **editable installation**, by first cloning the repository and then:
 
-      pip install -e ../gradvar
+      pip install -e <path to gradvar>
     
 This creates a symbolic link to your library directory, so changes in the library are immediately reflected in any project that uses it.
+
+## Usage
+
+Refer to the examples folder for notebooks that demonstrate how to use the library.
 
 # Development
 
