@@ -45,9 +45,9 @@ JAX is a powerful framework that combines NumPy-like syntax with automatic diffe
 
 The library can be installed directly from the repository using:
 
-      pip install gradvar@git+https://github.com/martinlie/gradvar.git@main#egg=gradvar
+      pip install gradvar
 
-into the current environment. 
+into the current environment.
 
 ## Install the Library Locally
 
