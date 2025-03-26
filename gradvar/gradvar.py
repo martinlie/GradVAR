@@ -10,10 +10,10 @@ from gradvar.earlystopping import EarlyStopping
 class GradVAR:
 
       def __init__(self):
-            self.A = None # lag coefficient matrices
-            self.B = None # bias term
-            self.p = None # lags
-            self.k = None # num of vars
+            self.A = None # VAR Coefficients
+            self.B = None # Intercept term
+            self.p = None # Num of lags
+            self.k = None # Num of vars
 
       def _check(self, D):
             if self.A is None or self.B is None or self.p is None or self.k is None:
@@ -42,14 +42,21 @@ class GradVAR:
             Y_target = Y[p:] # Shape: (T-p, k)
             return X, Y_target
 
-      def _init_matrices(self, p, k):
+      def _init_matrices_zeros(self, p, k):
+            A = jnp.zeros((p, k, k))
+            B = jnp.zeros((k,))
+            return A, B
+
+      def _init_matrices_rng(self, p, k):
             key_A, key_B = jr.split(jr.PRNGKey(0))
-            #A = jr.normal(key_A, (p, k, k)) * 0.01  # VAR Coefficients
-            #B = jr.normal(key_B, (k,)) * 0.01  # Intercept term
-            A = jnp.zeros((p, k, k))  # VAR Coefficients
-            B = jnp.zeros((k,))       # Intercept term
-            #A = jr.normal(key_A, (p, k, k)) * jnp.sqrt(2.0 / (k + k))  # VAR Coefficients (Glorot)
-            #B = jr.normal(key_B, (k,)) * jnp.sqrt(2.0 / k)             # Intercept term (Glorot)
+            A = jr.normal(key_A, (p, k, k)) * 0.01
+            B = jr.normal(key_B, (k,)) * 0.01
+            return A, B
+
+      def _init_matrices_glorot(self, p, k):
+            key_A, key_B = jr.split(jr.PRNGKey(0))
+            A = jr.normal(key_A, (p, k, k)) * jnp.sqrt(2.0 / (k + k))
+            B = jr.normal(key_B, (k,)) * jnp.sqrt(2.0 / k)
             return A, B
 
       def train(self, Y, p, num_epochs=1000, learning_rate=0.001, disable_progress=False, A=None, B=None, W=1., early_stopping=None):
@@ -58,7 +65,7 @@ class GradVAR:
             train_losses = jnp.zeros((num_epochs,))
             _, k = Y.shape # k=num vars
             if A is None or B is None:
-                  A, B = self._init_matrices(p, k)
+                  A, B = self._init_matrices_zeros(p, k)
 
             optimizer = optax.adam(learning_rate)
             opt_state = optimizer.init((A, B))

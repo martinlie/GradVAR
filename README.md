@@ -28,6 +28,32 @@ Traditional Vector Autoregression (VAR) models require continuous time series an
 * **Incremental Training with New Data** GradVAR allows continuous learning by updating the existing model with new observations.
 * **Custom Loss Functions and Weighting** You can define your own loss function and assign weights to different time periods or variables, tailoring the model to specific forecasting needs.
 
+Furthermore, by ensuring the model remains comprehensible and explainable, we can gain deeper insights into the underlying system. The final result is two matrices A and B that can forecast a system with autoregressive properties and can be easily implemented in a system with only basic arithmetic. Here is a conceptual example:
+
+```python
+# Example usage with 2 variables (k=2) and 2 lags (p=2)
+A = jnp.array([
+    [[0.6, -0.3], [0.2, 0.5]],   # A1 (lag 1)
+    [[0.1,  0.2], [-0.4, 0.3]],  # A2 (lag 2)
+])
+B = jnp.array([0.5, -0.2])  # Bias term
+Y_lags = jnp.array([
+    [10, 5],   # Y_{t-1}
+    [7, 6],    # Y_{t-2}
+])
+
+# Step 1: Initialize result array
+result = jnp.zeros((k,))
+
+# Step 2: Element-wise multiplication and summation over i and k
+for i in range(A.shape[0]):  # Iterate over the first dimension (p)
+    for k in range(A.shape[2]):  # Iterate over the third dimension (k)
+        result += A[i, :, k] * X[i, k]  # Element-wise multiplication and accumulation
+
+# Step 3: Add the bias B
+output = result + B
+```
+
 ## Pre-requisites
 
 The library works on simple data matrices, data frame functionality is out of scope for this library and should be implemented elsewhere.
@@ -37,50 +63,22 @@ The library works on simple data matrices, data frame functionality is out of sc
 
 ## Why Use JAX?
 
-JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support. Further, the gradient update is done by the Adam optimizer.
+JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support. The gradient update is done by the Adam optimizer.
 
-# Installation
+## Planned enhancements
+
+**Statistical summary**: Residual correlation analysis, compute optimal lag number, p-value calculation for each variable and lag
 
 ## Install via pip
 
 The library can be installed directly from the repository using:
 
-      pip install gradvar@git+https://github.com/martinlie/gradvar.git@main#egg=gradvar
+```
+pip install gradvar
+```
 
-into the current environment. 
-
-## Install the Library Locally
-
-Use `pip install -e` to create an **editable installation**, by first cloning the repository and then:
-
-      pip install -e <path to gradvar>
-    
-This creates a symbolic link to your library directory, so changes in the library are immediately reflected in any project that uses it.
+into the current environment.
 
 ## Usage
 
 Refer to the examples folder for notebooks that demonstrate how to use the library.
-
-# Development
-
-## Build the library
-
-```
-pip install -r requirements-dev.txt
-pip install -r requirements.txt
-python -m build
-```
-
-## Upload to PyPi
-
-```
-twine upload dist/*
-```
-
-## Release WHL file to Github
-
-```
-conda install gh --channel conda-forge
-gh auth login
-gh release create release-2025.3.1 dist/gradvar-2025.3.1-py3-none-any.whl --generate-notes
-```
