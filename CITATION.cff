@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use GradVAR in your research, please cite it using the following format."
+authors:
+  - family-names: Lie
+    given-names: Martin Forsberg
+    orcid: "0000-0001-7814-4790"
+title: "GradVAR: Gradient update Vector Autoregression modeling library"
+version: "2025.3.1"
+license: "MIT"
+url: "https://github.com/martinlie/GradVAR"
+date-released: "2025-03-25"
