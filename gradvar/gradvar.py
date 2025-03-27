@@ -1,5 +1,6 @@
 import optax
 import jax
+import jax.lax as lax
 import jax.numpy as jnp
 import jax.random as jr
 from jax import grad, jit, vmap, value_and_grad
@@ -92,23 +93,30 @@ class GradVAR:
 
       def forecast(self, Y, horizon):
             self._check(Y)
-            Y_pred = jnp.zeros((horizon, self.k))
             Y_lags = Y[-self.p:]  # Last p observations as initial input
 
-            for t in range(horizon):
+            def step(carry, _):
+                  Y_lags = carry
                   Y_new = self._predict(self.A, self.B, Y_lags)
                   Y_lags = jnp.roll(Y_lags, shift=-1, axis=0).at[-1].set(Y_new)
-                  Y_pred = Y_pred.at[t].set(Y_new)
+                  return Y_lags, Y_new
 
+            _, Y_pred = jax.lax.scan(step, Y_lags, None, length=horizon)
             return Y_pred
 
-      def lagged_forecast(self, Y, horizon, disable_progress=False):
+      def lagged_forecast(self, Y, horizon):
             self._check(Y)
             T, _ = Y.shape
-            Y_pred = jnp.full((T, self.k), jnp.nan)          
+            Y_pred = jnp.full((T, self.k), jnp.nan)
 
-            for t in tqdm(range(T - self.p - horizon - 1), disable=disable_progress):      
-                  Y_lags = Y[t:t + self.p]
-                  Y_new = self.forecast(Y_lags, horizon)[-1]
-                  Y_pred = Y_pred.at[t+self.p+horizon+1].set(Y_new)
+            indices = jnp.arange(T - self.p - horizon - 1)
+            
+            def single_forecast(t):
+                  Y_lags = lax.dynamic_slice(Y, (t, 0), (self.p, Y.shape[1]))
+                  return self.forecast(Y_lags, horizon)[-1]
+            
+            Y_new_values = vmap(single_forecast)(indices)
+            update_indices = indices + self.p + horizon + 1
+            Y_pred = Y_pred.at[update_indices].set(Y_new_values)
+
             return Y_pred

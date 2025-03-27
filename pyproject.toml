@@ -27,9 +27,10 @@ classifiers = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/martinlie/GradVAR.git"
 Repository = "https://github.com/martinlie/GradVAR.git"
 Issues = "https://github.com/martinlie/GradVAR/issues"
-Changelog = "https://github.com/martinlie/GradVAR/activity"
+Changelog = "https://github.com/martinlie/GradVAR/blob/main/CHANGELOG.md"
 
 [tool.setuptools.dynamic]
 version = {attr = "gradvar.__version__"}  # any module attribute compatible with ast.literal_eval
