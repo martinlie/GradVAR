@@ -1,10 +1,11 @@
 # Changelog
 
-## 2025.3.2 (not released)
+## (not released)
 
 ### Enhancements
 
-* Forecast and lagged forecast now use JIT-compliant Jax syntax, increasing performance
+* Forecast and lagged forecast now use JIT-compliant Jax syntax, increasing performance (martinlie)
+* Added possbility to reuse optimizer when running multiple calls to train() (martinlie)
 
 ## 2025.3.1
 

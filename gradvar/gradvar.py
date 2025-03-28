@@ -60,7 +60,7 @@ class GradVAR:
             B = jr.normal(key_B, (k,)) * jnp.sqrt(2.0 / k)
             return A, B
 
-      def train(self, Y, p, num_epochs=1000, learning_rate=0.001, disable_progress=False, A=None, B=None, W=1., early_stopping=None):
+      def train(self, Y, p, num_epochs=1000, learning_rate=0.001, disable_progress=False, A=None, B=None, W=1., early_stopping=None, optimizer=None, opt_state=None):
             """ Train VAR model using JAX autodiff """
             
             train_losses = jnp.zeros((num_epochs,))
@@ -68,8 +68,9 @@ class GradVAR:
             if A is None or B is None:
                   A, B = self._init_matrices_zeros(p, k)
 
-            optimizer = optax.adam(learning_rate)
-            opt_state = optimizer.init((A, B))
+            if optimizer is None:
+                  optimizer = optax.adam(learning_rate)
+                  opt_state = optimizer.init((A, B))
 
             for epoch in tqdm(range(num_epochs), disable=disable_progress):
 
@@ -89,7 +90,7 @@ class GradVAR:
             self.B = B
             self.p = p
             self.k = k
-            return train_losses
+            return train_losses, optimizer, opt_state
 
       def forecast(self, Y, horizon):
             self._check(Y)
