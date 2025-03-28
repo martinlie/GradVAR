@@ -21,7 +21,7 @@ def test_earlystopping():
     av = GradVAR()
     early_stopping = EarlyStopping(patience=30, min_delta=1e-5)
     num_epochs=10000
-    losses = av.train(Y, p=50, learning_rate=0.001, num_epochs=num_epochs, early_stopping = early_stopping)
+    losses, *_ = av.train(Y, p=50, learning_rate=0.001, num_epochs=num_epochs, early_stopping = early_stopping)
 
     assert(len(losses) < num_epochs)
 

@@ -35,7 +35,7 @@ def test_static_train():
       assert(jnp.allclose(Y_test, Y_pred, atol=1e-3))
 
       # train the A and B
-      losses = av.train(Y, p, num_epochs=10, learning_rate=0.001, disable_progress=False, A=A, B=B)
+      losses, *_ = av.train(Y, p, num_epochs=10, learning_rate=0.001, disable_progress=False, A=A, B=B)
       assert(len(losses) == 10)
 
       testA = jnp.array([[[0.02622642, 0.03025265],
