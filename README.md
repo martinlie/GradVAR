@@ -13,6 +13,7 @@ Y_t = \mu + \sum_{i=1}^{p} A_i Y_{t-i} + \epsilon_t
 $$
 
 Where:
+
 * $Y_t$ is the vector of endogenous variables at time $t$
 * $\mu$ is a vector of constants (intercepts),
 * $A_i$ is a matrix of coefficients for the $i$-th lag,
@@ -73,7 +74,7 @@ JAX is a powerful framework that combines NumPy-like syntax with automatic diffe
 
 The library can be installed directly from the repository using:
 
-```
+```sh
 pip install gradvar
 ```
 
@@ -82,3 +83,20 @@ into the current environment.
 ## Usage
 
 Refer to the examples folder for notebooks that demonstrate how to use the library.
+
+## Citation
+
+Please use this citation if you use this software as part of a scientific publication.
+
+```bibtex
+@software{Lie_GradVAR_Gradient_update_2025,
+    author = {Lie, Martin Forsberg},
+    license = {MIT},
+    title = {{GradVAR: Gradient update Vector Autoregression modeling library}},
+    url = {https://github.com/martinlie/GradVAR}
+}
+```
+
+## License
+
+The MIT License (MIT). Please see the [license file](LICENSE) for more information.

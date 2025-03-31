@@ -1,5 +1,12 @@
 # Development
 
+## Create environment
+
+```
+python -m venv .venv
+source .venv/bin/activate
+```
+
 ## Install the library locally
 
 Use `pip install -e` to create an **editable installation**, by first cloning the repository and then:
