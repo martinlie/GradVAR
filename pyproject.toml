@@ -26,6 +26,9 @@ classifiers = [
   "Programming Language :: Python"
 ]
 
+[project.optional-dependencies]
+gpu = ["jax[gpu]"]
+
 [project.urls]
 Homepage = "https://github.com/martinlie/GradVAR.git"
 Repository = "https://github.com/martinlie/GradVAR.git"

@@ -6,7 +6,9 @@ Gradient update Vector Autoregression modeling library
 
 Vector Autoregression (VAR) is a statistical model used to capture the linear interdependencies among multiple time series data. It generalizes the univariate autoregressive model to multiple time series, allowing each variable to be modeled as a linear function of its own past values and the past values of other variables in the system.
 
-A VAR model with $k$ variables and $p$ lags can be expressed as a system of equations:
+In a VAR model, all variables are treated as endogenous, meaning their values are determined within the system. Each time series is influenced by its own history as well as the history of the other series included in the model. This setup is particularly useful for analyzing systems where variables interact with and influence each other over time, such as in economics or finance.
+
+A VAR model with $n$ variables and $p$ lags can be expressed as a system of equations:
 
 $$
 Y_t = \mu + \sum_{i=1}^{p} A_i Y_{t-i} + \epsilon_t
@@ -18,6 +20,39 @@ Where:
 * $A_i$ is a matrix of coefficients for the $i$-th lag,
 * $p$ is the number of lags,
 * $\epsilon_t$ is a vector of error terms (shocks or innovations) at time $t$
+
+## Extending the model
+
+When the model is extended to include exogenous variables, it becomes a VARX model. Exogenous variables are external inputs to the system whose values are determined outside the model. They are used to explain or predict the behavior of the endogenous variables but are not themselves influenced by the system's internal dynamics. Including exogenous variables allows the model to account for the impact of known external factors, improving predictive performance and interpretability when such influences are present.
+
+Examples of exogenous variables:
+
+* Process set points
+* Price forecasts
+* Macro economic policies
+
+A VARX model can be expressed as a system of equations:
+
+$$
+Y_t = \mu + \sum_{i=1}^{p} A_i Y_{t-i} + \sum_{j=0}^{s} B_j X_{t-j} + \epsilon_t
+$$
+
+Where:
+* $Y_t$ is the vector of endogenous variables at time $t$,
+* $X_t$ is the vector of exogenous variables at time $t$,
+* $\mu$ is a vector of constants (intercepts),
+* $A_i$ is a matrix of coefficients for the endogenous lags,
+* $B_j$ is a matrix of coefficients for the exogenous lags,
+* $p$ is the number of lags of endogenous variables
+* $s$ is the number of lags of exogenous variables
+* $\epsilon_t$ is a vector of error terms (shocks or innovations) at time $t$
+
+The library makes the assumption that the future value of each exogenous variable is the current value, i.e. when a set point is set to a specific value, this is treated in the future as well, using forward filling.
+
+Changes to this assumption might be accomodated for taking into account known future information via a plan or an optimizer.
+
+See the examples folder for a demonstration of a simple VARX model.
+
 
 ## Why this lib?
 
@@ -64,10 +99,6 @@ The library works on simple data matrices, data frame functionality is out of sc
 ## Why Use JAX?
 
 JAX is a powerful framework that combines NumPy-like syntax with automatic differentiation and just-in-time (JIT) compilation and GPU/TPU support. The gradient update is done by the Adam optimizer.
-
-## Planned enhancements
-
-**Statistical summary**: Residual correlation analysis, compute optimal lag number, p-value calculation for each variable and lag
 
 ## Install via pip
 

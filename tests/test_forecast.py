@@ -30,7 +30,7 @@ def test_earlystopping():
 def test_forecast(test_earlystopping):
     av, Y = test_earlystopping
 
-    Y_forecast = av.forecast(Y, 250)
+    Y_forecast = av.forecast(Y, horizon=250)
 
     assert(Y_forecast.shape[0] == 250)
     assert(Y_forecast.shape[1] == 3)
@@ -39,6 +39,6 @@ def test_lagged_forecast(test_earlystopping):
     av, Y = test_earlystopping
 
     horizon = 25
-    Y_forecast = av.lagged_forecast(Y, horizon)
+    Y_forecast = av.lagged_forecast(Y, horizon=horizon)
 
     assert(Y_forecast.shape == Y.shape)

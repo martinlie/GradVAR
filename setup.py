@@ -10,5 +10,8 @@ setup(
       "jax",
       "optax",
       "tqdm"
-    ]
+    ],
+    extras_require={
+        "gpu": ["jax[gpu]"]
+    }
 )
