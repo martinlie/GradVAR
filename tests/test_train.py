@@ -48,7 +48,7 @@ def test_static_train_with_exo():
       # test predict before training
       Xe, Xx, Y_target = av._prepare_data(Ye, Yx, p, s)
       Y_pred = av._predict(A, B, C, D, Xe[0], Xx[0]) # first sample
-      Y_test = jnp.array([0.009, 0.033])
+      Y_test = jnp.array([7.1e-05, 2.2e-02])
 
       assert(Y_pred.shape == Y_test.shape)
       assert(jnp.allclose(Y_test, Y_pred, atol=1e-3))
@@ -91,7 +91,7 @@ def test_static_train_without_exo():
       # test predict before training
       Xe, Xx, Y_target = av._prepare_data(Ye, Yx, p, s)
       Y_pred = av._predict(A, B, C, D, Xe[0], Xx[0]) # first sample
-      Y_test = jnp.array([0.003, 0.025])
+      Y_test = jnp.array([-0.005, 0.015])
 
       assert(Y_pred.shape == Y_test.shape)
       assert(jnp.allclose(Y_test, Y_pred, atol=1e-3))

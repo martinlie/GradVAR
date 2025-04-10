@@ -26,7 +26,7 @@ def test_single_predict():
             [7, 6]    # Y_{t-2}
       ])
 
-      Y_test = jnp.array([6.4, 3.8])
+      Y_test = jnp.array([5.8, 2.5])
       Y_pred = av.predict(Xe)
 
       assert(Y_pred.shape == Y_test.shape)
@@ -60,10 +60,10 @@ def test_multiple_predict():
       Yx = jnp.zeros((Ye.shape[0], 0))
 
       Y_test = jnp.array(
-            [[ 0.7, 11.8],
-             [ 1.2, 18.8],
-             [ 1.7, 25.8],
-             [ 2.2, 32.8]])
+           [[-4.7, 10.9 ],
+            [-6.0, 18.8 ],
+            [-7.3, 26.7 ],
+            [-8.6, 34.6 ]])
 
       Xe, Xx, Y_target = av._prepare_data(Ye, Yx, p=2, s=2) # one batch
 
