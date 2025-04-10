@@ -3,6 +3,7 @@ import jax
 import jax.lax as lax
 import jax.numpy as jnp
 import jax.random as jr
+from functools import partial
 from jax import grad, jit, vmap, value_and_grad
 from jax.scipy import stats
 from tqdm import tqdm
@@ -36,6 +37,7 @@ class GradVAR:
             self._check(X, Y)
             return self._predict(self.A, self.B, self.C, self.D, X, Y)
 
+      @partial(jit, static_argnums=0)
       def _predict(self, A, B, C, D, X, Y):
             """
             VARX prediction using fully broadcasted and vectorized multiplications.
@@ -43,35 +45,32 @@ class GradVAR:
             Parameters:
             - A: (p, n, n)       — endogenous coefficients
             - B: (n,)            — endogenous bias
-            - X: (T, p, n)       — endogenous lags
+            - X: (p, n)          — endogenous lags
             - C: (s+1, m, n)     — exogenous coefficients
-            - Y: (T, s+1, m)     — exogenous lags
+            - Y: (s+1, m)        — exogenous lags
             - D: (n,)            — exogenous bias
 
             Returns:
-            - output: (n,)       — predicted output (collapsed over T)
+            - output: (n,)       — predicted output
             """
 
-            # Endogenous effect
-            endo_result = jnp.sum(A * X[:, None, :], axis=0)           # shape (p, n, n)
-            endogenous_effect = jnp.sum(endo_result, axis=0) + B       # shape (n,)
-            
-            n = endogenous_effect.shape[0]
-            
-            # Compute exogenous effect only if included
+            endogenous_effect = jnp.einsum('pn,pnm->m', X, A) + B
+
+            n = B.shape[0]
+
             def compute_exo(_):
-                  exo_result = jnp.sum(C * Y[:, None, :], axis=0)     # shape (s+1, m, n)
-                  exogenous_effect = jnp.sum(exo_result, axis=0) + D            # shape (n,)
-                  return jnp.resize(exogenous_effect, (n,)) # Ensure padded to (n,)
+                  raw = jnp.einsum('sm,smn->n', Y, C) + D
+                  return jnp.resize(raw, (n,))  
 
             def skip_exo(_):
-                  return jnp.zeros_like(endogenous_effect)
+                  return jnp.zeros((n,), dtype=B.dtype)
 
             include_exogenous = (C.shape[1] > 0) & (C.shape[2] > 0)
             exogenous_effect = lax.cond(include_exogenous, compute_exo, skip_exo, operand=None)
 
             return endogenous_effect + exogenous_effect
 
+      @partial(jit, static_argnums=0)
       def _compute_loss_multi(self, A, B, C, D, X, Y, Y_target, W):
             Y_pred = vmap(lambda x,y: self._predict(A, B, C, D, x, y))(X, Y) # multiple
             loss = jnp.mean((Y_target - Y_pred) ** 2) * W
@@ -119,9 +118,9 @@ class GradVAR:
             _, n = Ye.shape # number of endogenous vars
             _, m = Yx.shape # number of exogenous vars
             if A is None or B is None:
-                  #A, B, C, D = self._init_matrices_zeros(p, s, n, m)
+                  A, B, C, D = self._init_matrices_zeros(p, s, n, m)
                   #A, B, C, D = self._init_matrices_rng(p, s, n, m)
-                  A, B, C, D = self._init_matrices_glorot(p, s, n, m)
+                  #A, B, C, D = self._init_matrices_glorot(p, s, n, m)
 
             if optimizer is None:
                   optimizer = optax.adam(learning_rate)
